@@ -35,6 +35,7 @@ namespace ByteDev.Testing
         /// </summary>
         /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
         /// <returns>Settings type.</returns>
+        /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file.</exception>
         public TTestSettings GetSettings<TTestSettings>()
         {
             foreach (var filePath in FilePaths)
@@ -43,7 +44,7 @@ namespace ByteDev.Testing
                     return Deserialize<TTestSettings>(filePath);
             }
 
-            throw new TestingException("Could not find test settings.");
+            throw new TestingException("Could not find test settings file.");
         }
 
         private static TTestSettings Deserialize<TTestSettings>(string filePath)

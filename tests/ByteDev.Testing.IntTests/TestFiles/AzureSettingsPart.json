@@ -1,0 +1,5 @@
+﻿{
+  "subscriptionId": "someSubscriptionId",
+  "tenantId": "someTenantId",
+  "extra": "something extra"
+}

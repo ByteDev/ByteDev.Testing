@@ -7,6 +7,8 @@ namespace ByteDev.Testing.IntTests
     public class TestSettingsTests : TestBase
     {
         private const string TestFilePath = @"TestFiles\DummySettings.json";
+        private const string AzureSettingsTestFilePath = @"TestFiles\AzureSettings.json";
+        private const string AzureSettingsTestPartFilePath = @"TestFiles\AzureSettingsPart.json";
 
         private TestSettings _sut;
 
@@ -32,7 +34,7 @@ namespace ByteDev.Testing.IntTests
         }
 
         [Test]
-        public void WhenSettingsFilleDoesNotExist_ThenThrowException()
+        public void WhenSettingsFileDoesNotExist_ThenThrowException()
         {
             _sut.FilePaths = new[]
             {
@@ -41,6 +43,38 @@ namespace ByteDev.Testing.IntTests
             };
 
             Assert.Throws<TestingException>(() => _sut.GetSettings<DummySettings>());
+        }
+
+        [Test]
+        public void WhenUsingTestAzureSettings_ThenReturnSettings()
+        {
+            _sut.FilePaths = new[]
+            {
+                AzureSettingsTestFilePath
+            };
+
+            var result = _sut.GetSettings<TestAzureSettings>();
+
+            Assert.That(result.ClientId, Is.EqualTo("someClientId"));
+            Assert.That(result.ClientSecret, Is.EqualTo("someClientSecret"));
+            Assert.That(result.SubscriptionId, Is.EqualTo("someSubscriptionId"));
+            Assert.That(result.TenantId, Is.EqualTo("someTenantId"));
+        }
+
+        [Test]
+        public void WhenUsingTestAzureSettings_AndSomeSettingsMissing_ThenReturnSettings()
+        {
+            _sut.FilePaths = new[]
+            {
+                AzureSettingsTestPartFilePath
+            };
+
+            var result = _sut.GetSettings<TestAzureSettings>();
+
+            Assert.That(result.ClientId, Is.Null);
+            Assert.That(result.ClientSecret, Is.Null);
+            Assert.That(result.SubscriptionId, Is.EqualTo("someSubscriptionId"));
+            Assert.That(result.TenantId, Is.EqualTo("someTenantId"));
         }
     }
 

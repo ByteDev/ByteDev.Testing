@@ -1,0 +1,6 @@
+﻿{
+  "clientId": "someClientId",
+  "clientSecret": "someClientSecret",
+  "subscriptionId": "someSubscriptionId",
+  "tenantId": "someTenantId"
+}

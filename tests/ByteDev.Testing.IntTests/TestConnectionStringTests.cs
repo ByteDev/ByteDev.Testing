@@ -67,6 +67,14 @@ namespace ByteDev.Testing.IntTests
 
                 Assert.Throws<TestingException>(() => _sut.GetConnectionString());
             }
+
+            [Test]
+            public void WhenPathsIsNull_ThenThrowException()
+            {
+                _sut.FilePaths = null;
+
+                Assert.Throws<TestingException>(() => _sut.GetConnectionString());
+            }
         }
     }
 }

@@ -74,6 +74,9 @@ namespace ByteDev.Testing
 
         private string GetConnStringFromFile()
         {
+            if (FilePaths == null)
+                return null;
+
             foreach (var filePath in FilePaths)
             {
                 if (File.Exists(filePath))

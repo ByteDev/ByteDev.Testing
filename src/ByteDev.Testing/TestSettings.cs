@@ -35,9 +35,12 @@ namespace ByteDev.Testing
         /// </summary>
         /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
         /// <returns>Settings type.</returns>
-        /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file.</exception>
+        /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
         public TTestSettings GetSettings<TTestSettings>()
         {
+            if (FilePaths == null)
+                throw new TestingException($"Could not find test settings file as {nameof(FilePaths)} property set to null.");
+
             foreach (var filePath in FilePaths)
             {
                 if (File.Exists(filePath))
@@ -51,7 +54,17 @@ namespace ByteDev.Testing
         {
             var json = File.ReadAllText(filePath);
 
-            return JsonSerializer.Deserialize<TTestSettings>(json);
+            try
+            {
+                return JsonSerializer.Deserialize<TTestSettings>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            catch (JsonException ex)
+            {
+                throw new TestingException($"Error while deserializing JSON settings in file: '{filePath}'. Check JSON is valid.", ex);
+            }
         }
     }
 }

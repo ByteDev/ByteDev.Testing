@@ -44,9 +44,11 @@ FileInfo file = FileBuilder.InFileSystem
                     .Build();
 ```
 
+---
+
 ### TestConnectionString
 
-Represents a method to help retrieve a test connection string for automated testing so connection string constants are not stored in code or config.
+Represents a test connection string that lives external to the test project in possibly either an environment variable or file.
 
 ```csharp
 // Get reference to assembly that is running the tests
@@ -58,7 +60,7 @@ var testConn = new TestConnectionString(assembly);
 testConn.EnvironmentVarName = "MyIntTests-ConnString";
 
 // Set possible files where the connection string might be held
-testConn.FilePaths = new []
+testConn.FilePaths = new[]
 {
     @"X:\Secure\MyIntTests-ConnString.txt",
     @"C:\User\jonbob\MyIntTests-ConnString.txt",
@@ -66,6 +68,8 @@ testConn.FilePaths = new []
 
 string connStr = testConn.GetConnectionString();
 ```
+
+---
 
 ### TestSettings
 
@@ -80,8 +84,8 @@ var testSettings = new TestSettings(assembly);
 // Set possible files where the test settings might be held
 testSettings.FilePaths = new[]
 {
-    @"X:\Secure\MyAppSettings.json",
-    @"C:\User\jonbob\MyAppSettings.json",
+    @"X:\Secure\MyApp.settings.json",
+    @"C:\User\jonbob\MyApp.settings.json",
 };
 
 MyAppSettings settings = testSettings.GetSettings<MyAppSettings>();
@@ -98,11 +102,23 @@ public class MyAppSettings
 }
 ```
 
-Example JSON settings file `MyAppSettings.json`:
+Example JSON settings file `MyAppSettings.json` (property name case is ignored):
 
 ```json
 {
   "KeyVaultName": "my-keyvault",
-  "ClientId": "98a0d492-c6c6-4f1f-9d19-a98d94242ce6"
+  "clientId": "98a0d492-c6c6-4f1f-9d19-a98d94242ce6"
 }
+```
+
+By default property `FilePaths` will be set with a number of default paths based on the assembly name.
+
+For example for the assembly `ByteDev.Testing.IntTests` the defaults are:
+
+```
+[0] = "C:\Temp\ByteDev.Testing.IntTests.settings.json"
+[1] = "C:\Dev\ByteDev.Testing.IntTests.settings.json"
+[2] = "Z:\Dev\ByteDev.Testing.IntTests.settings.json"
+[3] = "C:\Users\<user>\ByteDev.Testing.IntTests.settings.json"
+[4] = "C:\Users\<user>\Documents\ByteDev.Testing.IntTests.settings.json"
 ```

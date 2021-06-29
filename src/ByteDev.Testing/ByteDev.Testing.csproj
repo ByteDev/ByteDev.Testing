@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ByteDev.Io" Version="6.0.0" />
+    <PackageReference Include="ByteDev.Io" Version="7.2.1" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 

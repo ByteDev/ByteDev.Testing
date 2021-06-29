@@ -1,5 +1,16 @@
 # Release Notes
 
+## 2.0.1 - 29 June 2021
+
+Breaking changes:
+- (None)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- Package fix for dependency.
+
 ## 2.0.0 - 29 June 2021
 
 Breaking changes:

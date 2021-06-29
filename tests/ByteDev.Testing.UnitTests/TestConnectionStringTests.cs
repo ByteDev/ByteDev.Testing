@@ -21,6 +21,8 @@ namespace ByteDev.Testing.UnitTests
             [Test]
             public void WhenInit_ThenSetsFilePaths()
             {
+                string userName = Environment.UserName;
+
                 var sut = new TestConnectionString(Assembly.GetAssembly(typeof(TestConnectionStringTests)));
 
                 var result = sut.FilePaths.ToList();
@@ -29,8 +31,8 @@ namespace ByteDev.Testing.UnitTests
                 Assert.That(result.First(), Is.EqualTo(@"C:\Temp\ByteDev.Testing.UnitTests.connstring"));
                 Assert.That(result.Second(), Is.EqualTo(@"C:\Dev\ByteDev.Testing.UnitTests.connstring"));
                 Assert.That(result.Third(), Is.EqualTo(@"Z:\Dev\ByteDev.Testing.UnitTests.connstring"));
-                Assert.That(result.Fourth(), Is.EqualTo(@"C:\Users\PASTAN\ByteDev.Testing.UnitTests.connstring"));
-                Assert.That(result.Fifth(), Is.EqualTo(@"C:\Users\PASTAN\Documents\ByteDev.Testing.UnitTests.connstring"));
+                Assert.That(result.Fourth(), Is.EqualTo(@"C:\Users\" + userName + @"\ByteDev.Testing.UnitTests.connstring"));
+                Assert.That(result.Fifth(), Is.EqualTo(@"C:\Users\" + userName + @"\Documents\ByteDev.Testing.UnitTests.connstring"));
             }
         }
     }

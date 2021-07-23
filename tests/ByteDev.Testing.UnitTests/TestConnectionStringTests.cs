@@ -13,6 +13,15 @@ namespace ByteDev.Testing.UnitTests
         public class Constructor : TestSettingsTests
         {
             [Test]
+            public void WhenNoParam_ThenSetDefaults()
+            {
+                var sut = new TestConnectionString();
+
+                Assert.That(sut.EnvironmentVarName, Is.Null);
+                Assert.That(sut.FilePaths, Is.Empty);
+            }
+
+            [Test]
             public void WhenAssemblyIsNull_ThenThrowException()
             {
                 Assert.Throws<ArgumentNullException>(() => _ = new TestConnectionString(null));

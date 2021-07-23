@@ -1,5 +1,17 @@
 # Release Notes
 
+## 3.0.0 - 23 July 2021
+
+Breaking changes:
+- Renamed `TestConnectionString.GetConnectionString` to `GetValue`.
+
+New features:
+- Added param less constructor to `TestConnectionString` (option if consumer doesn't want default paths).
+- Added `TestApiKey`.
+
+Bug fixes / internal changes:
+- (None)
+
 ## 2.0.1 - 29 June 2021
 
 Breaking changes:

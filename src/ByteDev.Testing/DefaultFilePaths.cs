@@ -6,7 +6,7 @@ namespace ByteDev.Testing
 {
     internal static class DefaultFilePaths
     {
-        public static IEnumerable<string> GetDefaultFilePaths(string fileName)
+        public static IList<string> GetDefaultFilePaths(string fileName)
         {
             var userName = Environment.UserName;
 
@@ -19,8 +19,8 @@ namespace ByteDev.Testing
 
             if (!string.IsNullOrEmpty(userName))
             {
-                list.Add(Path.Combine(@"C:\Users\" + userName, fileName));
-                list.Add(Path.Combine(@"C:\Users\" + userName + @"\Documents", fileName));
+                list.Add(Path.Combine(@"C:\Users\", userName, fileName));
+                list.Add(Path.Combine(@"C:\Users\", userName, "Documents", fileName));
             }
 
             return list;

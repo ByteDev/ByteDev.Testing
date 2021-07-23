@@ -1,6 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
+using ByteDev.Configuration.Environment;
 using NUnit.Framework;
 
 namespace ByteDev.Testing.IntTests
@@ -8,34 +8,37 @@ namespace ByteDev.Testing.IntTests
     [TestFixture]
     public class TestConnectionStringTests : TestBase
     {
-        private TestConnectionString _sut;
-
-        [SetUp]
-        public new void SetUp()
-        {
-            _sut = new TestConnectionString(Assembly.GetAssembly(typeof(TestConnectionStringTests)));
-        }
-
         [TestFixture]
-        public class GetConnectionString : TestConnectionStringTests
+        public class GetValue : TestConnectionStringTests
         {
             private const string EnvVarName = "ByteDev-Testing-IntTests-ConnString";
             private const string ConnString = "DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=someAccountKey;EndpointSuffix=core.windows.net";
 
+            private TestConnectionString _sut;
+            private EnvironmentVariableProvider _envProvider;
+
+            [SetUp]
+            public new void SetUp()
+            {
+                _envProvider = new EnvironmentVariableProvider();
+
+                _sut = new TestConnectionString(Assembly.GetAssembly(typeof(TestConnectionStringTests)));
+            }
+
             [TearDown]
             public new void TearDown()
             {
-                Environment.SetEnvironmentVariable(EnvVarName, null);
+                _envProvider.Delete(EnvVarName);
             }
 
             [Test]
             public void WhenEnvVarSet_ThenReturnString()
             {
-                Environment.SetEnvironmentVariable(EnvVarName, ConnString);
+                _envProvider.Set(EnvVarName, ConnString);
 
                 _sut.EnvironmentVarName = EnvVarName;
 
-                var result = _sut.GetConnectionString();
+                var result = _sut.GetValue();
 
                 Assert.That(result, Is.EqualTo(ConnString));
             }
@@ -51,7 +54,7 @@ namespace ByteDev.Testing.IntTests
                     fileInfo.FullName
                 };
 
-                var result = _sut.GetConnectionString();
+                var result = _sut.GetValue();
 
                 Assert.That(result, Is.EqualTo(ConnString));
             }
@@ -65,15 +68,17 @@ namespace ByteDev.Testing.IntTests
                     Path.Combine(ExistingDirectoryPath, Path.GetRandomFileName())
                 };
 
-                Assert.Throws<TestingException>(() => _sut.GetConnectionString());
+                Assert.Throws<TestingException>(() => _sut.GetValue());
             }
 
             [Test]
-            public void WhenPathsIsNull_ThenThrowException()
+            public void WhenNoFilePaths_AndNoEnvVar_ThenThrowException()
             {
-                _sut.FilePaths = null;
+                _sut.FilePaths.Clear();
+                _sut.EnvironmentVarName = null;
 
-                Assert.Throws<TestingException>(() => _sut.GetConnectionString());
+                var ex = Assert.Throws<TestingException>(() => _sut.GetValue());
+                Assert.That(ex.Message, Is.EqualTo("Could not find test connection string."));
             }
         }
     }

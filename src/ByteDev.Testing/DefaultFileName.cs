@@ -4,34 +4,19 @@ namespace ByteDev.Testing
 {
     internal static class DefaultFileName
     {
-        public static string GetDefaultConnStringFileName()
-        {
-            return GetDefaultConnStringFileName(GetThisAssembly());
-        }
-
-        public static string GetDefaultConnStringFileName(Assembly assembly)
+        public static string GetConnStringFileName(Assembly assembly)
         {
             return assembly.GetName().Name + ".connstring";
         }
 
-        public static string GetDefaultSettingsFileName()
+        public static string GetApiKeyFileName(Assembly assembly)
         {
-            return GetDefaultSettingsFileName(GetThisAssembly());
+            return assembly.GetName().Name + ".apikey";
         }
-        
-        public static string GetDefaultSettingsFileName(Assembly assembly)
+
+        public static string GetJsonSettingsFileName(Assembly assembly)
         {
             return assembly.GetName().Name + ".settings.json";
-        }
-
-        private static Assembly GetThisAssembly()
-        {
-            var assembly = Assembly.GetAssembly(typeof(TestConnectionString));
-
-            if (assembly == null)
-                throw new TestingException("Cannot find containing assembly.");
-
-            return assembly;
         }
     }
 }

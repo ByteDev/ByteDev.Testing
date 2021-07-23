@@ -21,7 +21,7 @@ namespace ByteDev.Testing
             if (containingAssembly == null)
                 throw new ArgumentNullException(nameof(containingAssembly));
 
-            FilePaths = DefaultFilePaths.GetDefaultFilePaths(DefaultFileName.GetDefaultSettingsFileName(containingAssembly));
+            FilePaths = DefaultFilePaths.GetDefaultFilePaths(DefaultFileName.GetJsonSettingsFileName(containingAssembly));
         }
 
         /// <summary>

@@ -1,19 +1,28 @@
-﻿using System.Text.Json.Serialization;
-
-namespace ByteDev.Testing
+﻿namespace ByteDev.Testing
 {
+    /// <summary>
+    /// Represents a set of common Azure settings.
+    /// </summary>
     public class TestAzureSettings
     {
-        [JsonPropertyName("subscriptionId")]
+        /// <summary>
+        /// Subscription ID.
+        /// </summary>
         public string SubscriptionId { get; set; }
 
-        [JsonPropertyName("tenantId")]
+        /// <summary>
+        /// Tenant ID.
+        /// </summary>
         public string TenantId { get; set; }
 
-        [JsonPropertyName("clientId")]
+        /// <summary>
+        /// Client ID.
+        /// </summary>
         public string ClientId { get; set; }
 
-        [JsonPropertyName("clientSecret")]
+        /// <summary>
+        /// Client secret.
+        /// </summary>
         public string ClientSecret { get; set; }
     }
 }

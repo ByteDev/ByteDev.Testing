@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ByteDev.Testing.IntTests.TestFiles;
 using NUnit.Framework;
 
 namespace ByteDev.Testing.IntTests
@@ -17,15 +18,6 @@ namespace ByteDev.Testing.IntTests
         [TestFixture]
         public class GetSettings : TestSettingsTests
         {
-            [Test]
-            public void WhenFilePathsIsNull_ThenThrowException()
-            {
-                _sut.FilePaths = null;
-
-                var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummySettings>());
-                Assert.That(ex.Message, Is.EqualTo("Could not find test settings file as FilePaths property set to null."));
-            }
-
             [Test]
             public void WhenSettingsFileDoesNotExist_ThenThrowException()
             {
@@ -78,16 +70,20 @@ namespace ByteDev.Testing.IntTests
                 Assert.That(result.KeyVaultName, Is.EqualTo("my-keyvault-camel"));
                 Assert.That(result.ClientId, Is.EqualTo("79714b64-d9b6-4d12-b107-adb6fa381bf3"));
             }
+        }
 
+        [TestFixture]
+        public class GetAzureSettings : TestSettingsTests
+        {
             [Test]
-            public void WhenUsingTestAzureSettings_ThenReturnSettings()
+            public void WhenAllSettings_ThenSetAllSettings()
             {
                 _sut.FilePaths = new[]
                 {
                     TestFilePaths.AzureSettings
                 };
 
-                var result = _sut.GetSettings<TestAzureSettings>();
+                var result = _sut.GetAzureSettings();
 
                 Assert.That(result.ClientId, Is.EqualTo("someClientId"));
                 Assert.That(result.ClientSecret, Is.EqualTo("someClientSecret"));
@@ -96,14 +92,14 @@ namespace ByteDev.Testing.IntTests
             }
 
             [Test]
-            public void WhenUsingTestAzureSettings_AndSomeSettingsMissing_ThenReturnSettings()
+            public void WhenSomeSettingsMissing_ThenSetMissingToNull()
             {
                 _sut.FilePaths = new[]
                 {
                     TestFilePaths.AzureSettingsPart
                 };
 
-                var result = _sut.GetSettings<TestAzureSettings>();
+                var result = _sut.GetAzureSettings();
 
                 Assert.That(result.ClientId, Is.Null);
                 Assert.That(result.ClientSecret, Is.Null);

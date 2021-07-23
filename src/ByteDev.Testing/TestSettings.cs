@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text.Json;
 
 namespace ByteDev.Testing
 {
     /// <summary>
-    /// Represents test settings that live external to the project in a JSON file.
+    /// Represents a set of test settings (from in a JSON file).
     /// </summary>
     public class TestSettings
     {
+        private IList<string> _filePaths;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestSettings" /> class.
+        /// </summary>
+        public TestSettings()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestSettings" /> class.
+        /// Adds default file paths based on the containing assembly's name.
         /// </summary>
         /// <param name="containingAssembly">Containing test assembly that is consuming the settings.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="containingAssembly" /> is null.</exception>
@@ -25,46 +34,43 @@ namespace ByteDev.Testing
         }
 
         /// <summary>
-        /// Text file paths that could contain the connection string. By default
-        /// will contain a number of possible file paths.
+        /// Text file paths that could contain the connection string.
+        /// By default will contain a number of possible file paths.
         /// </summary>
-        public IEnumerable<string> FilePaths { get; set; }
+        public IList<string> FilePaths
+        {
+            get => _filePaths ?? (_filePaths = new List<string>());
+            set => _filePaths = value;
+        }
 
         /// <summary>
-        /// Retrieves the settings from a file deserialized to a given type.
+        /// Retrieves the settings from a JSON file deserialized to a given type.
         /// </summary>
         /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
         /// <returns>Settings type.</returns>
         /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
         public TTestSettings GetSettings<TTestSettings>()
         {
-            if (FilePaths == null)
-                throw new TestingException($"Could not find test settings file as {nameof(FilePaths)} property set to null.");
+            if (FilePaths.Count == 0)
+                throw new TestingException($"Could not find test settings file as {nameof(FilePaths)} property is empty.");
 
             foreach (var filePath in FilePaths)
             {
                 if (File.Exists(filePath))
-                    return Deserialize<TTestSettings>(filePath);
+                    return JsonSettingsFileSerializer.Deserialize<TTestSettings>(filePath);
             }
 
             throw new TestingException("Could not find test settings file.");
         }
 
-        private static TTestSettings Deserialize<TTestSettings>(string filePath)
+        /// <summary>
+        /// Retrieves a set of Azure settings from a JSON file.
+        /// </summary>
+        /// <returns>Azure settings.</returns>
+        /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
+        public TestAzureSettings GetAzureSettings()
         {
-            var json = File.ReadAllText(filePath);
-
-            try
-            {
-                return JsonSerializer.Deserialize<TTestSettings>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-            catch (JsonException ex)
-            {
-                throw new TestingException($"Error while deserializing JSON settings in file: '{filePath}'. Check JSON is valid.", ex);
-            }
+            return GetSettings<TestAzureSettings>();
         }
     }
 }

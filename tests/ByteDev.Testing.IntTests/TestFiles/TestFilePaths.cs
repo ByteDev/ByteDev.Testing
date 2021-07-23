@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing.IntTests
+﻿namespace ByteDev.Testing.IntTests.TestFiles
 {
     internal static class TestFilePaths
     {

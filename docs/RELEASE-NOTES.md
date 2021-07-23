@@ -7,7 +7,9 @@ Breaking changes:
 
 New features:
 - Added param less constructor to `TestConnectionString` (option if consumer doesn't want default paths).
-- Added `TestApiKey`.
+- Added param less constructor to `TestSettings` (option if consumer doesn't want default paths).
+- Added `TestApiKey` class.
+- Added `TestSettings.GetAzureSettings` method.
 
 Bug fixes / internal changes:
 - (None)

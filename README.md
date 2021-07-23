@@ -26,7 +26,7 @@ Full details of the release notes can be viewed on [GitHub](https://github.com/B
 
 ### Builders
 
-Builders for both directories and files.
+Builders to help create both directories and files quickly for testing purposes.
 
 ```csharp
 // Create a directory quickly on disk
@@ -46,79 +46,84 @@ FileInfo file = FileBuilder.InFileSystem
 
 ---
 
-### TestConnectionString
+### TestConnectionString & TestApiKey
 
-Represents a test connection string that lives external to the test project in possibly either an environment variable or file.
+The `TestConnectionString` and `TestApiKey` types both represent different types of single value string settings that live external to the test project.
+
+These settings can be stored possibly in either an environment variable or file.
+
+Example usage of `TestConnectionString`:
 
 ```csharp
 // Get reference to assembly that is running the tests
 var assembly = Assembly.GetAssembly(typeof(SomeIntTests));
 
+// Create an instance of the type. A number of default file paths will be set on FilePath
+// when a reference to the containing assembly is passed on the constructor.
 var testConn = new TestConnectionString(assembly);
 
 // Set the name of a possible environment variable where the connection might be held
 testConn.EnvironmentVarName = "MyIntTests-ConnString";
 
-// Set possible files where the connection string might be held
-testConn.FilePaths = new[]
-{
-    @"X:\Secure\MyIntTests-ConnString.txt",
-    @"C:\User\jonbob\MyIntTests-ConnString.txt",
-};
+// Set extra file paths where the connection string might be held.
+testConn.FilePaths.Add(@"X:\Secure\MyIntTests.connstring");
 
-string connStr = testConn.GetConnectionString();
+string connStr = testConn.GetValue();
 ```
 
 ---
 
 ### TestSettings
 
-Represents test settings that live external to the test project in a JSON file.
+The `TestSettings` type represents sets of test settings that live external to the test project in a JSON file.
+
+Example custom settings type:
+
+```csharp
+public class MyAppSettings
+{
+    public string MySecret1 { get; set; }
+
+    public string MySecret2 { get; set; }
+}
+```
+
+Example JSON settings file `MyApp.settings.json` (property name case is ignored):
+
+```json
+{
+  "MySecret1": "some secret 1",
+  "MySecret2": "some secret 2"
+}
+```
+
+Example code to retrie `MyAppSettings`:
 
 ```csharp
 // Get reference to assembly that is running the tests
 var assembly = Assembly.GetAssembly(typeof(SomeIntTests));
 
+// Create an instance of the type. A number of default file paths will be set on FilePath
+// when a reference to the containing assembly is passed on the constructor.
 var testSettings = new TestSettings(assembly);
 
-// Set possible files where the test settings might be held
-testSettings.FilePaths = new[]
-{
-    @"X:\Secure\MyApp.settings.json",
-    @"C:\User\jonbob\MyApp.settings.json",
-};
+// // Set extra file paths where the test settings might be held
+testSettings.FilePaths.Add(@"X:\Secure\MyApp.settings.json");
 
 MyAppSettings settings = testSettings.GetSettings<MyAppSettings>();
+
+// settings.MySecret1 == "some secret 1"
+// settings.MySecret2 == "some secret 2"
 ```
 
-Example settings type:
+As well as defining and providing your own settings type you can also use the built in `TestAzureSettings` type. 
+
+For example:
 
 ```csharp
-public class MyAppSettings
-{
-    public string KeyVaultName { get; set; }
+TestAzureSettings settings = testSettings.GetAzureSettings();
 
-    public string ClientId { get; set; }
-}
+// TestAzureSettings contains common Azure settings, including:
+// SubscriptionId, TenantId, ClientId, ClientSecret etc.
 ```
 
-Example JSON settings file `MyAppSettings.json` (property name case is ignored):
-
-```json
-{
-  "KeyVaultName": "my-keyvault",
-  "clientId": "98a0d492-c6c6-4f1f-9d19-a98d94242ce6"
-}
-```
-
-By default property `FilePaths` will be set with a number of default paths based on the assembly name.
-
-For example for the assembly `ByteDev.Testing.IntTests` the defaults are:
-
-```
-[0] = "C:\Temp\ByteDev.Testing.IntTests.settings.json"
-[1] = "C:\Dev\ByteDev.Testing.IntTests.settings.json"
-[2] = "Z:\Dev\ByteDev.Testing.IntTests.settings.json"
-[3] = "C:\Users\<user>\ByteDev.Testing.IntTests.settings.json"
-[4] = "C:\Users\<user>\Documents\ByteDev.Testing.IntTests.settings.json"
-```

@@ -13,6 +13,14 @@ namespace ByteDev.Testing.UnitTests
         public class Constructor : TestSettingsTests
         {
             [Test]
+            public void WhenNoParam_ThenSetDefaults()
+            {
+                var sut = new TestSettings();
+
+                Assert.That(sut.FilePaths, Is.Empty);
+            }
+
+            [Test]
             public void WhenAssemblyIsNull_ThenThrowException()
             {
                 Assert.Throws<ArgumentNullException>(() => _ = new TestSettings(null));
@@ -33,6 +41,21 @@ namespace ByteDev.Testing.UnitTests
                 Assert.That(result.Third(), Is.EqualTo(@"Z:\Dev\ByteDev.Testing.UnitTests.settings.json"));
                 Assert.That(result.Fourth(), Is.EqualTo(@"C:\Users\" + userName + @"\ByteDev.Testing.UnitTests.settings.json"));
                 Assert.That(result.Fifth(), Is.EqualTo(@"C:\Users\" + userName + @"\Documents\ByteDev.Testing.UnitTests.settings.json"));
+            }
+        }
+
+        [TestFixture]
+        public class GetSettings : TestSettingsTests
+        {
+            [Test]
+            public void WhenFilePathsIsEmpty_ThenThrowException()
+            {
+                var sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
+
+                sut.FilePaths.Clear();
+
+                var ex = Assert.Throws<TestingException>(() => _ = sut.GetSettings<object>());
+                Assert.That(ex.Message, Is.EqualTo("Could not find test settings file as FilePaths property is empty."));
             }
         }
     }

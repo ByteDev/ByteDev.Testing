@@ -133,7 +133,7 @@ TestAzureSettings settings = testSettings.GetAzureSettings();
 
 Allows you to provide a fake HTTP status code and content to return from a `HttpClient` call.
 
-Reference in the `ByteDev.Testing.Http` namespace.
+Reference the `ByteDev.Testing.Http` namespace.
 
 ```csharp
 var code = HttpStatusCode.OK;
@@ -143,7 +143,7 @@ var client = new HttpClient(new FakeResponseHandler(code, content));
 
 var response = await client.GetAsync("http://www.google.com/");
 
-var str = await await result.Content.ReadAsStringAsync();
+var str = await result.Content.ReadAsStringAsync();
 
 // response.StatusCode == HttpStatusCode.OK
 // str == "test"

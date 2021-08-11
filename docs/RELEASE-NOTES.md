@@ -1,5 +1,16 @@
 # Release Notes
 
+## 3.1.0 - 11 August 2021
+
+Breaking changes:
+- (None)
+
+New features:
+- Added `FakeResponseHandler` class.
+
+Bug fixes / internal changes:
+- (None)
+
 ## 3.0.0 - 23 July 2021
 
 Breaking changes:

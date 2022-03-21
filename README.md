@@ -129,22 +129,40 @@ TestAzureSettings settings = testSettings.GetAzureSettings();
 
 ---
 
-### FakeResponseHandler
+### FakeHttpMessageHandler
 
-Allows you to provide a fake HTTP status code and content to return from a `HttpClient` call.
+Allows you to provide a sequence of *outcomes* (HTTP responses or exceptions thrown) that correspond to each HTTP request made.
 
 Reference the `ByteDev.Testing.Http` namespace.
 
 ```csharp
-var code = HttpStatusCode.OK;
-var content = new StringContent("test");
+var uri = new Uri("http://www.google.com/");
 
-var client = new HttpClient(new FakeResponseHandler(code, content));
+// Create a sequence of outcomes...
+// 1st request will return a response OK with content.
+// 2nd request will throw request timeout exception.
+var outcomes = new List<FakeRequestOutcome>
+{
+    new FakeRequestOutcome(new HttpResponseMessage(HttpStatusCode.OK)
+    {
+        Content = new StringContent("Testing")
+    }),
+    new FakeRequestOutcome(FakeRequestOutcome.CreateRequestTimeout())
+}
 
-var response = await client.GetAsync("http://www.google.com/");
+// Create a fake HTTP handler
+var handler = new FakeHttpMessageHandler(outcomes);
 
-var str = await result.Content.ReadAsStringAsync();
+var httpClient = new HttpClient(handler);
 
-// response.StatusCode == HttpStatusCode.OK
-// str == "test"
+var response1 = await httpClient.GetAsync(uri);
+var content = await response1.Content.ReadAsStringAsync();
+
+// response1.StatusCode == HttpStatusCode.OK
+// content == "Testing"
+
+// Throws TaskCanceledException("Request has timed out.")
+var response2 = await httpClient.GetAsync(uri);
+
+// handler.RequestsMade == 2
 ```

@@ -1,5 +1,17 @@
 # Release Notes
 
+## 4.0.0 - 21 March 2022
+
+Breaking changes:
+- Added `FakeHttpMessageHandler` class. (Different functionality to `FakeResponseHandler`).
+- Removed `FakeResponseHandler` class.
+
+New features:
+- Added `FakeRequestOutcome` class.
+
+Bug fixes / internal changes:
+- (None)
+
 ## 3.1.0 - 11 August 2021
 
 Breaking changes:

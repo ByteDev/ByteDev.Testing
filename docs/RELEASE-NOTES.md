@@ -1,5 +1,16 @@
 # Release Notes
 
+## 4.0.1 - 22 June 2022
+
+Breaking changes:
+- (None)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- Minor XML doc fixes.
+
 ## 4.0.0 - 21 March 2022
 
 Breaking changes:

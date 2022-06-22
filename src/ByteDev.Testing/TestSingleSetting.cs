@@ -16,7 +16,6 @@ namespace ByteDev.Testing
 
         /// <summary>
         /// Text file paths that could contain the single test setting.
-        /// By default will contain a number of possible file paths.
         /// </summary>
         public IList<string> FilePaths
         {

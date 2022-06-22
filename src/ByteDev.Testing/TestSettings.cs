@@ -34,8 +34,7 @@ namespace ByteDev.Testing
         }
 
         /// <summary>
-        /// Text file paths that could contain the connection string.
-        /// By default will contain a number of possible file paths.
+        /// JSON file paths that could contain the settings.
         /// </summary>
         public IList<string> FilePaths
         {
@@ -44,7 +43,7 @@ namespace ByteDev.Testing
         }
 
         /// <summary>
-        /// Retrieves the settings from a JSON file deserialized to a given type.
+        /// Attempts to retrieve the settings from a JSON file deserialized to a given type.
         /// </summary>
         /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
         /// <returns>Settings type.</returns>

@@ -1,12 +1,12 @@
 # Release Notes
 
-## 4.0.1 - 22 June 2022
+## 5.0.0 - 22 June 2022
 
 Breaking changes:
-- (None)
+- Package now targets .NET Standard 2.1.
 
 New features:
-- (None)
+- Added functionality to bind settings from Azure Key Vault.
 
 Bug fixes / internal changes:
 - Minor XML doc fixes.

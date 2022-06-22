@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ByteDev.Testing.Serialization;
 
 namespace ByteDev.Testing
 {
@@ -11,6 +12,7 @@ namespace ByteDev.Testing
     public class TestSettings
     {
         private IList<string> _filePaths;
+        private KeyVaultConfig _keyVaultConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestSettings" /> class.
@@ -43,23 +45,33 @@ namespace ByteDev.Testing
         }
 
         /// <summary>
-        /// Attempts to retrieve the settings from a JSON file deserialized to a given type.
+        /// Attempts to create the settings first from Azure Key Vault (if KV configuration provied) and
+        /// secondly from a JSON settings file.
         /// </summary>
         /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
-        /// <returns>Settings type.</returns>
+        /// <returns>New instance of the settings type.</returns>
         /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
-        public TTestSettings GetSettings<TTestSettings>()
+        public TTestSettings GetSettings<TTestSettings>() where TTestSettings : class, new()
         {
-            if (FilePaths.Count == 0)
-                throw new TestingException($"Could not find test settings file as {nameof(FilePaths)} property is empty.");
+            if (KeyVaultConfig.UseKeyVault)
+            {
+                try
+                {
+                    return SettingsKeyVaultSerializer.Deserialize<TTestSettings>(KeyVaultConfig);
+                }
+                catch (Exception ex)
+                {
+                    throw new TestingException("Error while trying to deserialize settings object from Azure Key Vault settings.", ex);
+                }
+            }
 
             foreach (var filePath in FilePaths)
             {
                 if (File.Exists(filePath))
-                    return JsonSettingsFileSerializer.Deserialize<TTestSettings>(filePath);
+                    return SettingsJsonFileSerializer.Deserialize<TTestSettings>(filePath);
             }
 
-            throw new TestingException("Could not find test settings file.");
+            throw new TestingException("Could not create new settings instance.");
         }
 
         /// <summary>
@@ -70,6 +82,12 @@ namespace ByteDev.Testing
         public TestAzureSettings GetAzureSettings()
         {
             return GetSettings<TestAzureSettings>();
+        }
+
+        public KeyVaultConfig KeyVaultConfig
+        {
+            get => _keyVaultConfig ?? (_keyVaultConfig = new KeyVaultConfig());
+            set => _keyVaultConfig = value;
         }
     }
 }

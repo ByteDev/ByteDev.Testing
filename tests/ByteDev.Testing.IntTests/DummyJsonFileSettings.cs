@@ -1,6 +1,6 @@
 ﻿namespace ByteDev.Testing.IntTests
 {
-    public class DummySettings
+    public class DummyJsonFileSettings
     {
         public string KeyVaultName { get; set; }
 

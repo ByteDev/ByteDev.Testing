@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Serialization
 {
-    internal static class JsonSettingsFileSerializer
+    internal static class SettingsJsonFileSerializer
     {
         public static TTestSettings Deserialize<TTestSettings>(string filePath)
         {

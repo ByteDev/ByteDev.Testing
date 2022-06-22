@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using ByteDev.Testing.IntTests.TestFiles;
 using NUnit.Framework;
 
@@ -7,17 +8,17 @@ namespace ByteDev.Testing.IntTests
     [TestFixture]
     public class TestSettingsTests : TestBase
     {
-        private TestSettings _sut;
-
-        [SetUp]
-        public new void SetUp()
-        {
-            _sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
-        }
-
         [TestFixture]
-        public class GetSettings : TestSettingsTests
+        public class GetSettings_Files : TestSettingsTests
         {
+            private TestSettings _sut;
+
+            [SetUp]
+            public new void SetUp()
+            {
+                _sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
+            }
+
             [Test]
             public void WhenSettingsFileDoesNotExist_ThenThrowException()
             {
@@ -27,8 +28,8 @@ namespace ByteDev.Testing.IntTests
                     GetFilePath()
                 };
 
-                var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummySettings>());
-                Assert.That(ex.Message, Is.EqualTo("Could not find test settings file."));
+                var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummyJsonFileSettings>());
+                Assert.That(ex.Message, Is.EqualTo("Could not create new settings instance."));
             }
 
             [Test]
@@ -39,7 +40,7 @@ namespace ByteDev.Testing.IntTests
                     TestFilePaths.InvalidJson
                 };
 
-                var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummySettings>());
+                var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummyJsonFileSettings>());
                 Assert.That(ex.Message, Is.EqualTo("Error while deserializing JSON settings in file: 'TestFiles\\InvalidJson.json'. Check JSON is valid."));
             }
 
@@ -51,7 +52,7 @@ namespace ByteDev.Testing.IntTests
                     GetFilePath(), TestFilePaths.DummySettingsPascal
                 };
 
-                var result = _sut.GetSettings<DummySettings>();
+                var result = _sut.GetSettings<DummyJsonFileSettings>();
 
                 Assert.That(result.KeyVaultName, Is.EqualTo("my-keyvault-pascal"));
                 Assert.That(result.ClientId, Is.EqualTo("98a0d492-c6c6-4f1f-9d19-a98d94242ce6"));
@@ -65,7 +66,7 @@ namespace ByteDev.Testing.IntTests
                     GetFilePath(), TestFilePaths.DummySettingsCamel
                 };
 
-                var result = _sut.GetSettings<DummySettings>();
+                var result = _sut.GetSettings<DummyJsonFileSettings>();
 
                 Assert.That(result.KeyVaultName, Is.EqualTo("my-keyvault-camel"));
                 Assert.That(result.ClientId, Is.EqualTo("79714b64-d9b6-4d12-b107-adb6fa381bf3"));
@@ -75,6 +76,14 @@ namespace ByteDev.Testing.IntTests
         [TestFixture]
         public class GetAzureSettings : TestSettingsTests
         {
+            private TestSettings _sut;
+
+            [SetUp]
+            public new void SetUp()
+            {
+                _sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
+            }
+
             [Test]
             public void WhenAllSettings_ThenSetAllSettings()
             {

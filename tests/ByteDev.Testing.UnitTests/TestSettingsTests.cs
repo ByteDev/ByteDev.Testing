@@ -48,14 +48,15 @@ namespace ByteDev.Testing.UnitTests
         public class GetSettings : TestSettingsTests
         {
             [Test]
-            public void WhenFilePathsIsEmpty_ThenThrowException()
+            public void WhenNoKvConfig_AndFilePathsIsEmpty_ThenThrowException()
             {
                 var sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
-
+                
                 sut.FilePaths.Clear();
+                sut.KeyVaultConfig.KeyVaultUri = null;
 
                 var ex = Assert.Throws<TestingException>(() => _ = sut.GetSettings<object>());
-                Assert.That(ex.Message, Is.EqualTo("Could not find test settings file as FilePaths property is empty."));
+                Assert.That(ex.Message, Is.EqualTo("Could not create new settings instance."));
             }
         }
     }

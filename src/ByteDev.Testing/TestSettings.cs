@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using ByteDev.Testing.Serialization;
+using ByteDev.Testing.Providers;
 
 namespace ByteDev.Testing
 {
@@ -11,37 +9,18 @@ namespace ByteDev.Testing
     /// </summary>
     public class TestSettings
     {
-        private IList<string> _filePaths;
-        private KeyVaultConfig _keyVaultConfig;
+        private readonly IList<ISettingsProvider> _providers = new List<ISettingsProvider>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestSettings" /> class.
-        /// </summary>
-        public TestSettings()
+        public TestSettings AddProvider(ISettingsProvider provider)
         {
+            _providers.Add(provider);
+            return this;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestSettings" /> class.
-        /// Adds default file paths based on the containing assembly's name.
-        /// </summary>
-        /// <param name="containingAssembly">Containing test assembly that is consuming the settings.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="containingAssembly" /> is null.</exception>
-        public TestSettings(Assembly containingAssembly)
+        public TestSettings ClearProviders()
         {
-            if (containingAssembly == null)
-                throw new ArgumentNullException(nameof(containingAssembly));
-
-            FilePaths = DefaultFilePaths.GetDefaultFilePaths(DefaultFileName.GetJsonSettingsFileName(containingAssembly));
-        }
-
-        /// <summary>
-        /// JSON file paths that could contain the settings.
-        /// </summary>
-        public IList<string> FilePaths
-        {
-            get => _filePaths ?? (_filePaths = new List<string>());
-            set => _filePaths = value;
+            _providers.Clear();
+            return this;
         }
 
         /// <summary>
@@ -53,25 +32,27 @@ namespace ByteDev.Testing
         /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
         public TTestSettings GetSettings<TTestSettings>() where TTestSettings : class, new()
         {
-            if (KeyVaultConfig.UseKeyVault)
+            if (_providers.Count == 0)
+                throw new TestingException("No settings providers added. Add at least one.");
+
+            Exception lastProviderEx = null;
+
+            foreach (var provider in _providers)
             {
                 try
                 {
-                    return SettingsKeyVaultSerializer.Deserialize<TTestSettings>(KeyVaultConfig);
+                    var settings = provider.GetSettings<TTestSettings>();
+
+                    if (settings != null)
+                        return settings;
                 }
                 catch (Exception ex)
                 {
-                    throw new TestingException("Error while trying to deserialize settings object from Azure Key Vault settings.", ex);
+                    lastProviderEx = ex;
                 }
             }
 
-            foreach (var filePath in FilePaths)
-            {
-                if (File.Exists(filePath))
-                    return SettingsJsonFileSerializer.Deserialize<TTestSettings>(filePath);
-            }
-
-            throw new TestingException("Could not create new settings instance.");
+            throw new TestingException("Could not create new test settings instance.", lastProviderEx);
         }
 
         /// <summary>
@@ -82,12 +63,6 @@ namespace ByteDev.Testing
         public TestAzureSettings GetAzureSettings()
         {
             return GetSettings<TestAzureSettings>();
-        }
-
-        public KeyVaultConfig KeyVaultConfig
-        {
-            get => _keyVaultConfig ?? (_keyVaultConfig = new KeyVaultConfig());
-            set => _keyVaultConfig = value;
         }
     }
 }

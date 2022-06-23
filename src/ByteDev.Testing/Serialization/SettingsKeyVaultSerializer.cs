@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Reflection;
 
@@ -6,10 +7,10 @@ namespace ByteDev.Testing.Serialization
 {
     internal static class SettingsKeyVaultSerializer
     {
-        public static TTestSettings Deserialize<TTestSettings>(KeyVaultConfig keyVaultConfig) 
+        public static TTestSettings Deserialize<TTestSettings>(Uri keyVaultUri, string settingPrefix) 
             where TTestSettings : class, new()
         {
-            var client = new KeyVaultSecretClient(keyVaultConfig.KeyVaultUri.AbsoluteUri);
+            var client = new KeyVaultSecretClient(keyVaultUri.AbsoluteUri);
 
             var settings = new TTestSettings();
             
@@ -17,7 +18,7 @@ namespace ByteDev.Testing.Serialization
                 
             foreach (var pi in properties)
             {
-                string kvSettingName = keyVaultConfig.SettingPrefix + pi.Name;
+                string kvSettingName = settingPrefix + pi.Name;
                 string settingValue = client.GetValueIfExistsAsync(kvSettingName).Result;
 
                 if (settingValue != null)

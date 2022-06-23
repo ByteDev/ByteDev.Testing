@@ -1,15 +1,19 @@
 # Release Notes
 
-## 5.0.0 - 22 June 2022
+## 5.0.0 - ?
 
 Breaking changes:
 - Package now targets .NET Standard 2.1.
+- `TestSettings` completely changed to take `ISettingsProvider` implementations via `AddProvider` method.
+- Removed `TestSettings.FilePaths` property.
 
 New features:
-- Added functionality to bind settings from Azure Key Vault.
+- Added functionality to bind settings from Azure Key Vault via use of `KeyVaultSettingsProvider`.
 
 Bug fixes / internal changes:
 - Minor XML doc fixes.
+- Added package reference `ByteDev.Azure.KeyVault`.
+- Added package reference `ByteDev.Reflection`.
 
 ## 4.0.0 - 21 March 2022
 

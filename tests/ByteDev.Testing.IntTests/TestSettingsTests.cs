@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using ByteDev.Testing.IntTests.TestFiles;
+using ByteDev.Testing.Providers;
 using NUnit.Framework;
 
 namespace ByteDev.Testing.IntTests
@@ -9,48 +9,50 @@ namespace ByteDev.Testing.IntTests
     public class TestSettingsTests : TestBase
     {
         [TestFixture]
-        public class GetSettings_Files : TestSettingsTests
+        public class GetSettings_JsonFile : TestSettingsTests
         {
             private TestSettings _sut;
 
             [SetUp]
             public new void SetUp()
             {
-                _sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
+                _sut = new TestSettings();
             }
 
             [Test]
             public void WhenSettingsFileDoesNotExist_ThenThrowException()
             {
-                _sut.FilePaths = new[]
+                _sut.AddProvider(new JsonFileSettingsProvider(new[]
                 {
                     GetFilePath(),
                     GetFilePath()
-                };
+                }));
 
                 var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummyJsonFileSettings>());
-                Assert.That(ex.Message, Is.EqualTo("Could not create new settings instance."));
+                Assert.That(ex.Message, Is.EqualTo("Could not create new test settings instance."));
             }
 
             [Test]
             public void WhenSettingsIsNotValidJson_ThenThrowException()
             {
-                _sut.FilePaths = new[]
+                _sut.AddProvider(new JsonFileSettingsProvider(new[]
                 {
                     TestFilePaths.InvalidJson
-                };
-
+                }));
+                    
                 var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummyJsonFileSettings>());
-                Assert.That(ex.Message, Is.EqualTo("Error while deserializing JSON settings in file: 'TestFiles\\InvalidJson.json'. Check JSON is valid."));
+                Assert.That(ex.Message, Is.EqualTo("Could not create new test settings instance."));
+                Assert.That(ex.InnerException.Message, Is.EqualTo("Error while deserializing JSON settings in file: 'TestFiles\\InvalidJson.json'. Check JSON is valid."));
             }
 
             [Test]
             public void WhenPascalCaseSettingsFileExists_ThenReturnSettings()
             {
-                _sut.FilePaths = new[]
+                _sut.AddProvider(new JsonFileSettingsProvider(new[]
                 {
-                    GetFilePath(), TestFilePaths.DummySettingsPascal
-                };
+                    GetFilePath(), 
+                    TestFilePaths.DummySettingsPascal
+                }));
 
                 var result = _sut.GetSettings<DummyJsonFileSettings>();
 
@@ -61,10 +63,11 @@ namespace ByteDev.Testing.IntTests
             [Test]
             public void WhenCamelCaseSettingsFileExists_ThenReturnSettings()
             {
-                _sut.FilePaths = new[]
+                _sut.AddProvider(new JsonFileSettingsProvider(new[]
                 {
-                    GetFilePath(), TestFilePaths.DummySettingsCamel
-                };
+                    GetFilePath(), 
+                    TestFilePaths.DummySettingsCamel
+                }));
 
                 var result = _sut.GetSettings<DummyJsonFileSettings>();
 
@@ -74,23 +77,23 @@ namespace ByteDev.Testing.IntTests
         }
 
         [TestFixture]
-        public class GetAzureSettings : TestSettingsTests
+        public class GetAzureSettings_JsonFile : TestSettingsTests
         {
             private TestSettings _sut;
 
             [SetUp]
             public new void SetUp()
             {
-                _sut = new TestSettings(Assembly.GetAssembly(typeof(TestSettingsTests)));
+                _sut = new TestSettings();
             }
 
             [Test]
             public void WhenAllSettings_ThenSetAllSettings()
             {
-                _sut.FilePaths = new[]
+                _sut.AddProvider(new JsonFileSettingsProvider(new[]
                 {
                     TestFilePaths.AzureSettings
-                };
+                }));
 
                 var result = _sut.GetAzureSettings();
 
@@ -103,10 +106,10 @@ namespace ByteDev.Testing.IntTests
             [Test]
             public void WhenSomeSettingsMissing_ThenSetMissingToNull()
             {
-                _sut.FilePaths = new[]
+                _sut.AddProvider(new JsonFileSettingsProvider(new[]
                 {
                     TestFilePaths.AzureSettingsPart
-                };
+                }));
 
                 var result = _sut.GetAzureSettings();
 

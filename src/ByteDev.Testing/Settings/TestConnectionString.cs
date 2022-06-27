@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Settings
 {
     /// <summary>
     /// Represents a test connection string setting.
@@ -9,14 +9,14 @@ namespace ByteDev.Testing
     public class TestConnectionString : TestSingleSetting
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestConnectionString" /> class.
+        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.Settings.TestConnectionString" /> class.
         /// </summary>
         public TestConnectionString()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestConnectionString" /> class.
+        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.Settings.TestConnectionString" /> class.
         /// Adds default file paths based on the containing assembly's name.
         /// </summary>
         /// <param name="containingAssembly">Containing test assembly that is consuming the setting.</param>

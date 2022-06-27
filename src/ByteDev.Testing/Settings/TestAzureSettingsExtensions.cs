@@ -1,6 +1,6 @@
 ﻿using Azure.Identity;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Settings
 {
     public static class TestAzureSettingsExtensions
     {

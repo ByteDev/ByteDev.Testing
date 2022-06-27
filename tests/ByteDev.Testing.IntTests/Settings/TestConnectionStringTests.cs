@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System.Reflection;
 using ByteDev.Configuration.Environment;
+using ByteDev.Testing.Settings;
 using NUnit.Framework;
 
-namespace ByteDev.Testing.IntTests
+namespace ByteDev.Testing.IntTests.Settings
 {
     [TestFixture]
     public class TestConnectionStringTests : TestBase

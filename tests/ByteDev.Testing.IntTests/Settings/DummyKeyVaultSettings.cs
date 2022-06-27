@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing.IntTests
+﻿namespace ByteDev.Testing.IntTests.Settings
 {
     public class DummyKeyVaultSettings
     {

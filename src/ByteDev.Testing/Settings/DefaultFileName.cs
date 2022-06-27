@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Settings
 {
     internal static class DefaultFileName
     {

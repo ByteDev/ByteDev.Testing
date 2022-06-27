@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ByteDev.Testing.Providers;
+using ByteDev.Testing.Settings.Providers;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Settings
 {
     /// <summary>
     /// Represents a set of test settings (from in a JSON file).
@@ -24,12 +24,11 @@ namespace ByteDev.Testing
         }
 
         /// <summary>
-        /// Attempts to create the settings first from Azure Key Vault (if KV configuration provied) and
-        /// secondly from a JSON settings file.
+        /// Attempts to create a new settings instance based on the given providers.
         /// </summary>
         /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
         /// <returns>New instance of the settings type.</returns>
-        /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
+        /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>
         public TTestSettings GetSettings<TTestSettings>() where TTestSettings : class, new()
         {
             if (_providers.Count == 0)
@@ -56,13 +55,23 @@ namespace ByteDev.Testing
         }
 
         /// <summary>
-        /// Retrieves a set of Azure settings from a JSON file.
+        /// Attempts to create a new Azure settings instance based on the given providers.
         /// </summary>
         /// <returns>Azure settings.</returns>
-        /// <exception cref="T:ByteDev.Testing.TestingException">Could not find test settings file or problem while deserializing JSON.</exception>
+        /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>
         public TestAzureSettings GetAzureSettings()
         {
             return GetSettings<TestAzureSettings>();
+        }
+
+        /// <summary>
+        /// Attempts to create a new Azure Key Vault settings instance based on the given providers.
+        /// </summary>
+        /// <returns>Azure Key Vault settings.</returns>
+        /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>
+        public TestAzureSettings GetAzureKeyVaultSettings()
+        {
+            return GetSettings<TestAzureKeyVaultSettings>();
         }
     }
 }

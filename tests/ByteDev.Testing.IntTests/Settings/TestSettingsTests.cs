@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Testing.IntTests.TestFiles;
-using ByteDev.Testing.Providers;
-using ByteDev.Testing.Serialization;
+using ByteDev.Testing.Settings;
+using ByteDev.Testing.Settings.Providers;
+using ByteDev.Testing.Settings.Serialization;
 using NUnit.Framework;
 
-namespace ByteDev.Testing.IntTests
+namespace ByteDev.Testing.IntTests.Settings
 {
     [TestFixture]
     public class TestSettingsTests : TestBase

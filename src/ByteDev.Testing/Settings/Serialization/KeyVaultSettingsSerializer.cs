@@ -2,7 +2,7 @@
 using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Reflection;
 
-namespace ByteDev.Testing.Serialization
+namespace ByteDev.Testing.Settings.Serialization
 {
     internal class KeyVaultSettingsSerializer
     {

@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing
+﻿namespace ByteDev.Testing.Settings
 {
     /// <summary>
     /// Represents a set of common Azure settings.

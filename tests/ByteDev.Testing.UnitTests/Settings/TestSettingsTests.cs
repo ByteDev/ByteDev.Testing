@@ -1,8 +1,9 @@
-﻿using ByteDev.Testing.Providers;
+﻿using ByteDev.Testing.Settings;
+using ByteDev.Testing.Settings.Providers;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ByteDev.Testing.UnitTests
+namespace ByteDev.Testing.UnitTests.Settings
 {
     [TestFixture]
     public class TestSettingsTests

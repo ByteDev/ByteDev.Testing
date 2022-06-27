@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Settings
 {
     /// <summary>
     /// Represents a test API key setting.
@@ -9,14 +9,14 @@ namespace ByteDev.Testing
     public class TestApiKey : TestSingleSetting
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestApiKey" /> class.
+        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.Settings.TestApiKey" /> class.
         /// </summary>
         public TestApiKey()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.TestApiKey" /> class.
+        /// Initializes a new instance of the <see cref="T:ByteDev.Testing.Settings.TestApiKey" /> class.
         /// Adds default file paths based on the containing assembly's name.
         /// </summary>
         /// <param name="containingAssembly">Containing test assembly that is consuming the setting.</param>

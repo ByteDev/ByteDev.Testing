@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ByteDev.Testing
+namespace ByteDev.Testing.Settings
 {
     internal static class DefaultFilePaths
     {

@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using ByteDev.Collections;
+using ByteDev.Testing.Settings;
 using NUnit.Framework;
 
-namespace ByteDev.Testing.UnitTests
+namespace ByteDev.Testing.UnitTests.Settings
 {
     [TestFixture]
     public class TestApiKeyTests

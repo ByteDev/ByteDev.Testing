@@ -24,17 +24,39 @@ Full details of the release notes can be viewed on [GitHub](https://github.com/B
 
 ## Usage
 
-### Builders
+The library is split into the following main parts:
+- Builders
+- HTTP
+- Settings
 
-Builders to help create both directories and files quickly for testing purposes.
+---
+
+### Builders - DirectoryBuilder
+
+`DirectoryBuilder` helps to create directories quickly for testing purposes.
 
 ```csharp
+using ByteDev.Testing.Builders;
+
+// ...
+
 // Create a directory quickly on disk
 DirectoryInfo dir = DirectoryBuilder.InFileSystem
                         .WithPath(@"C:\Temp\Testing")
                         .EmptyIfExists()
                         .Build();
+```
 
+---
+
+### Builders - FileBuilder
+
+`FileBuilder` helps to create files quickly for testing purposes.
+
+```csharp
+using ByteDev.Testing.Builders;
+
+// ...
 
 // Create a file quickly on disk
 FileInfo file = FileBuilder.InFileSystem
@@ -46,96 +68,15 @@ FileInfo file = FileBuilder.InFileSystem
 
 ---
 
-### TestConnectionString & TestApiKey
+### HTTP - FakeHttpMessageHandler
 
-The `TestConnectionString` and `TestApiKey` types both represent different types of single value string settings that live external to the test project.
-
-These settings can be stored possibly in either an environment variable or file.
-
-Example usage of `TestConnectionString`:
+`FakeHttpMessageHandler` allows you to provide a sequence of *outcomes* (HTTP responses or exceptions thrown) that correspond to each HTTP request made.
 
 ```csharp
-// Get reference to assembly that is running the tests
-var assembly = Assembly.GetAssembly(typeof(SomeIntTests));
+using ByteDev.Testing.Http;
 
-// Create an instance of the type. A number of default file paths will be set on FilePath
-// when a reference to the containing assembly is passed on the constructor.
-var testConn = new TestConnectionString(assembly);
+// ...
 
-// Set the name of a possible environment variable where the connection might be held
-testConn.EnvironmentVarName = "MyIntTests-ConnString";
-
-// Set extra file paths where the connection string might be held.
-testConn.FilePaths.Add(@"X:\Secure\MyIntTests.connstring");
-
-string connStr = testConn.GetValue();
-```
-
----
-
-### TestSettings
-
-The `TestSettings` type represents sets of test settings that live external to the test project in a JSON file.
-
-Example custom settings type:
-
-```csharp
-public class MyAppSettings
-{
-    public string MySecret1 { get; set; }
-
-    public string MySecret2 { get; set; }
-}
-```
-
-Example JSON settings file `MyApp.settings.json` (property name case is ignored):
-
-```json
-{
-  "MySecret1": "some secret 1",
-  "MySecret2": "some secret 2"
-}
-```
-
-Example code to retrie `MyAppSettings`:
-
-```csharp
-// Get reference to assembly that is running the tests
-var assembly = Assembly.GetAssembly(typeof(SomeIntTests));
-
-// Create an instance of the type. A number of default file paths will be set on FilePath
-// when a reference to the containing assembly is passed on the constructor.
-var testSettings = new TestSettings(assembly);
-
-// // Set extra file paths where the test settings might be held
-testSettings.FilePaths.Add(@"X:\Secure\MyApp.settings.json");
-
-MyAppSettings settings = testSettings.GetSettings<MyAppSettings>();
-
-// settings.MySecret1 == "some secret 1"
-// settings.MySecret2 == "some secret 2"
-```
-
-As well as defining and providing your own settings type you can also use the built in `TestAzureSettings` type. 
-
-For example:
-
-```csharp
-TestAzureSettings settings = testSettings.GetAzureSettings();
-
-// TestAzureSettings contains common Azure settings, including:
-// SubscriptionId, TenantId, ClientId, ClientSecret etc.
-```
-
----
-
-### FakeHttpMessageHandler
-
-Allows you to provide a sequence of *outcomes* (HTTP responses or exceptions thrown) that correspond to each HTTP request made.
-
-Reference the `ByteDev.Testing.Http` namespace.
-
-```csharp
 var uri = new Uri("http://www.google.com/");
 
 // Create a sequence of outcomes...
@@ -166,3 +107,96 @@ var response2 = await httpClient.GetAsync(uri);
 
 // handler.RequestsMade == 2
 ```
+
+---
+
+### Settings - TestSetting
+
+The `TestSetting` type represents a single string value setting that lives external to a test project.
+
+```csharp
+using ByteDev.Testing.Settings.Single;
+using ByteDev.Testing.Settings.Single.Providers;
+
+// ...
+
+var testSetting = new TestSetting();
+
+testSetting.AddProvider(new FileSettingProvider(new[]
+{
+    "C:\Dev\SomeSetting.apikey",
+    "C:\Temp\AnotherSetting.txt"
+}));
+
+testSetting.AddProvider(new EnvironmentSettingProvider("MyProjEnvVar"));
+
+string setting = testSetting.GetSetting();
+
+// The two files will be checked first for the setting and if 
+// not found the environment variable will be checked.
+```
+
+---
+
+### Setting TestSettings
+
+The `TestSettings` type represents sets of test settings that live external to a test project.
+
+Example custom settings type:
+
+```csharp
+public class MyAppSettings
+{
+    public string MySecret1 { get; set; }
+
+    public string MySecret2 { get; set; }
+}
+```
+
+Example JSON settings file `MyApp.settings.json` (property name case is ignored):
+
+```json
+{
+  "MySecret1": "some secret 1",
+  "MySecret2": "some secret 2"
+}
+```
+
+```csharp
+using ByteDev.Azure.KeyVault.Secrets;
+using ByteDev.Testing.Settings.Multiple;
+using ByteDev.Testing.Settings.Multiple.Providers;
+
+// ...
+var kvClient = new KeyVaultSecretClient(keyVaultUri);
+
+var testSettings = new TestSettings();
+
+testSettings
+    .AddProvider(new JsonFileSettingsProvider(@"X:\Secure\MyApp.settings.json"))
+    .AddProvider(new KeyVaultSettingsProvider(kvClient));
+
+// The TestSettings type will try to get the settings from the JSON
+// file first and if it fails will try Azure Key Vault
+
+MyAppSettings settings = testSettings.GetSettings<MyAppSettings>();
+```
+
+As well as defining and providing your own settings type you can also use the built in `TestAzureSettings` and `TestAzureKeyVaultSettings` classes. 
+
+For example:
+
+```csharp
+using ByteDev.Testing.Settings.Multiple.Entities;
+
+// ...
+
+TestAzureSettings settings = testSettings.GetAzureSettings();
+
+// TestAzureSettings contains common Azure settings, including:
+// SubscriptionId, TenantId, ClientId, ClientSecret etc.
+```
+
+---
+
+

@@ -40,6 +40,11 @@ namespace ByteDev.Testing.IntTests
             return Path.Combine(ExistingDirectoryPath, dirName);
         }
 
+        protected FileInfo CreateTextFile()
+        {
+            return CreateTextFile(string.Empty);
+        }
+
         protected FileInfo CreateTextFile(string content)
         {
             return FileBuilder.InFileSystem

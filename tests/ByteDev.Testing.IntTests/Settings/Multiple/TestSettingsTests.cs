@@ -1,14 +1,13 @@
 ﻿using System.Threading.Tasks;
 using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Testing.IntTests.TestFiles;
-using ByteDev.Testing.Settings;
 using ByteDev.Testing.Settings.Multiple;
 using ByteDev.Testing.Settings.Multiple.Entities;
 using ByteDev.Testing.Settings.Multiple.Providers;
 using ByteDev.Testing.Settings.Multiple.Serialization;
 using NUnit.Framework;
 
-namespace ByteDev.Testing.IntTests.Settings
+namespace ByteDev.Testing.IntTests.Settings.Multiple
 {
     [TestFixture]
     public class TestSettingsTests : TestBase
@@ -42,10 +41,7 @@ namespace ByteDev.Testing.IntTests.Settings
             [Test]
             public void WhenSettingsIsNotValidJson_ThenThrowException()
             {
-                _sut.AddProvider(new JsonFileSettingsProvider(new[]
-                {
-                    TestFilePaths.InvalidJson
-                }));
+                _sut.AddProvider(new JsonFileSettingsProvider(TestFilePaths.InvalidJson));
                     
                 var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummyJsonFileSettings>());
                 Assert.That(ex.Message, Is.EqualTo("Could not create new test settings instance."));

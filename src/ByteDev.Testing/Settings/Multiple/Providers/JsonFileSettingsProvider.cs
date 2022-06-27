@@ -24,6 +24,11 @@ namespace ByteDev.Testing.Settings.Multiple.Providers
             FilePaths = DefaultFilePaths.GetDefaultFilePaths(DefaultFileName.GetJsonSettingsFileName(containingAssembly));
         }
 
+        public JsonFileSettingsProvider(string filePath)
+        {
+            FilePaths.Add(filePath);
+        }
+
         public JsonFileSettingsProvider(IList<string> filePaths)
         {
             _filePaths = filePaths;

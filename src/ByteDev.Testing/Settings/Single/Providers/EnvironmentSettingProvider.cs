@@ -11,7 +11,12 @@ namespace ByteDev.Testing.Settings.Single.Providers
             get => _environmentVarNames ?? (_environmentVarNames = new List<string>());
             set => _environmentVarNames = value;
         }
-        
+
+        public EnvironmentSettingProvider(string environmentVarName)
+        {
+            EnvironmentVarNames.Add(environmentVarName);
+        }
+
         public EnvironmentSettingProvider(IList<string> environmentVarNames)
         {
             EnvironmentVarNames = environmentVarNames;

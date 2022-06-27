@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing.IntTests.Settings
+﻿namespace ByteDev.Testing.IntTests.Settings.Multiple
 {
     public class DummyJsonFileSettings
     {

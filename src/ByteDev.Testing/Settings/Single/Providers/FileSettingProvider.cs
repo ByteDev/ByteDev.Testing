@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ByteDev.Testing.Settings.Single.Providers
@@ -13,6 +14,19 @@ namespace ByteDev.Testing.Settings.Single.Providers
             set => _filePaths = value;
         }
 
+        public FileSettingProvider(FileInfo fileInfo)
+        {
+            if (fileInfo == null)
+                throw new ArgumentNullException(nameof(fileInfo));
+
+            FilePaths.Add(fileInfo.FullName);
+        }
+
+        public FileSettingProvider(string filePath)
+        {
+            FilePaths.Add(filePath);
+        }
+
         public FileSettingProvider(IList<string> filePaths)
         {
             FilePaths = filePaths;
@@ -23,7 +37,12 @@ namespace ByteDev.Testing.Settings.Single.Providers
             foreach (var filePath in FilePaths)
             {
                 if (File.Exists(filePath))
-                    return File.ReadAllText(filePath).Trim();
+                {
+                    var content = File.ReadAllText(filePath).Trim();
+
+                    if (!string.IsNullOrEmpty(content))
+                        return content;
+                }
             }
 
             return null;

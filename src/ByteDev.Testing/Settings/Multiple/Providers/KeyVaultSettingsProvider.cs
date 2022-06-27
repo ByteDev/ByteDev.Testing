@@ -1,8 +1,8 @@
 ﻿using System;
 using ByteDev.Azure.KeyVault.Secrets;
-using ByteDev.Testing.Settings.Serialization;
+using ByteDev.Testing.Settings.Multiple.Serialization;
 
-namespace ByteDev.Testing.Settings.Providers
+namespace ByteDev.Testing.Settings.Multiple.Providers
 {
     public class KeyVaultSettingsProvider : ISettingsProvider
     {

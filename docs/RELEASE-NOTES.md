@@ -5,7 +5,8 @@
 Breaking changes:
 - Package now targets .NET Standard 2.1.
 - `TestSettings` completely changed to take `ISettingsProvider` implementations via `AddProvider` method.
-- Removed `TestSettings.FilePaths` property.
+- `TestApiKey` and `TestConnectionString` merged into new `TestSetting` type.
+- `TestSetting` type takes `ISettingProvider` implementations via via `AddProvider` method.
 
 New features:
 - Added functionality to bind settings from Azure Key Vault via use of `KeyVaultSettingsProvider`.

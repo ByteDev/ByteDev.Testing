@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ByteDev.Testing.Settings
+namespace ByteDev.Testing.Settings.Single
 {
     internal static class EnvironmentVariableReader
     {

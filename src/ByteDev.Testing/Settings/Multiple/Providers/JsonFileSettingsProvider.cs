@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using ByteDev.Testing.Settings.Serialization;
+using ByteDev.Testing.Settings.Multiple.Serialization;
 
-namespace ByteDev.Testing.Settings.Providers
+namespace ByteDev.Testing.Settings.Multiple.Providers
 {
     public class JsonFileSettingsProvider : ISettingsProvider
     {

@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using ByteDev.Testing.Settings.Entities;
-using ByteDev.Testing.Settings.Providers;
+using ByteDev.Testing.Settings.Multiple.Entities;
+using ByteDev.Testing.Settings.Multiple.Providers;
 
-namespace ByteDev.Testing.Settings
+namespace ByteDev.Testing.Settings.Multiple
 {
     /// <summary>
-    /// Represents a set of test settings (from in a JSON file).
+    /// Represents a set of test settings.
     /// </summary>
     public class TestSettings
     {
         private readonly IList<ISettingsProvider> _providers = new List<ISettingsProvider>();
 
+        /// <summary>
+        /// Adds a settings provider to the list of providers.
+        /// </summary>
+        /// <param name="provider">Provider to add.</param>
+        /// <returns>Current test settings instance.</returns>
         public TestSettings AddProvider(ISettingsProvider provider)
         {
             _providers.Add(provider);
             return this;
         }
 
+        /// <summary>
+        /// Clear all settings providers from the list.
+        /// </summary>
+        /// <returns>Current test settings instance.</returns>
         public TestSettings ClearProviders()
         {
             _providers.Clear();
@@ -25,9 +34,9 @@ namespace ByteDev.Testing.Settings
         }
 
         /// <summary>
-        /// Attempts to create a new settings instance based on the given providers.
+        /// Attempts to create a new settings instance based on the list of providers.
         /// </summary>
-        /// <typeparam name="TTestSettings">Type to deserialize to.</typeparam>
+        /// <typeparam name="TTestSettings">Settings type to create.</typeparam>
         /// <returns>New instance of the settings type.</returns>
         /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>
         public TTestSettings GetSettings<TTestSettings>() where TTestSettings : class, new()
@@ -56,7 +65,7 @@ namespace ByteDev.Testing.Settings
         }
 
         /// <summary>
-        /// Attempts to create a new Azure settings instance based on the given providers.
+        /// Attempts to create a new Azure settings instance based on the list of providers.
         /// </summary>
         /// <returns>Azure settings.</returns>
         /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>
@@ -66,7 +75,7 @@ namespace ByteDev.Testing.Settings
         }
 
         /// <summary>
-        /// Attempts to create a new Azure Key Vault settings instance based on the given providers.
+        /// Attempts to create a new Azure Key Vault settings instance based on the list of providers.
         /// </summary>
         /// <returns>Azure Key Vault settings.</returns>
         /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>

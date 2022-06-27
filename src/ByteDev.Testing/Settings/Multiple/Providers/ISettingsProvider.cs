@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing.Settings.Providers
+﻿namespace ByteDev.Testing.Settings.Multiple.Providers
 {
     public interface ISettingsProvider
     {

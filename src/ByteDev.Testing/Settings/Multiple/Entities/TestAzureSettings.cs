@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing.Settings.Entities
+﻿namespace ByteDev.Testing.Settings.Multiple.Entities
 {
     /// <summary>
     /// Represents a set of common Azure settings.

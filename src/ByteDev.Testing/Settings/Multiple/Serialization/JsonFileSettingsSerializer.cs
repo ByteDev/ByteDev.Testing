@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace ByteDev.Testing.Settings.Serialization
+namespace ByteDev.Testing.Settings.Multiple.Serialization
 {
     internal static class JsonFileSettingsSerializer
     {

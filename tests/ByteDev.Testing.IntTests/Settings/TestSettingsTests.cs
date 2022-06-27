@@ -2,9 +2,10 @@
 using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Testing.IntTests.TestFiles;
 using ByteDev.Testing.Settings;
-using ByteDev.Testing.Settings.Entities;
-using ByteDev.Testing.Settings.Providers;
-using ByteDev.Testing.Settings.Serialization;
+using ByteDev.Testing.Settings.Multiple;
+using ByteDev.Testing.Settings.Multiple.Entities;
+using ByteDev.Testing.Settings.Multiple.Providers;
+using ByteDev.Testing.Settings.Multiple.Serialization;
 using NUnit.Framework;
 
 namespace ByteDev.Testing.IntTests.Settings

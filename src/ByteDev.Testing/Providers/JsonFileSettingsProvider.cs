@@ -34,7 +34,7 @@ namespace ByteDev.Testing.Providers
             foreach (var filePath in FilePaths)
             {
                 if (File.Exists(filePath))
-                    return SettingsJsonFileSerializer.Deserialize<TTestSettings>(filePath);
+                    return JsonFileSettingsSerializer.Deserialize<TTestSettings>(filePath);
             }
 
             return default;

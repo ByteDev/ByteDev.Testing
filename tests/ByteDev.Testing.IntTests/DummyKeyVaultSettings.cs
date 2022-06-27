@@ -2,6 +2,6 @@
 {
     public class DummyKeyVaultSettings
     {
-        public string SdkUserIdGrab { get; set; }
+        public string TestName { get; set; }
     }
 }

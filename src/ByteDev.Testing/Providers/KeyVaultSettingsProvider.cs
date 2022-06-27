@@ -1,32 +1,30 @@
 ﻿using System;
+using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Testing.Serialization;
 
 namespace ByteDev.Testing.Providers
 {
     public class KeyVaultSettingsProvider : ISettingsProvider
     {
-        public Uri KeyVaultUri { get; }
+        private readonly IKeyVaultSecretClient _kvClient;
+        private readonly string _settingPrefix;
 
-        public string SettingPrefix { get; }
-
-        public KeyVaultSettingsProvider(Uri keyVaultUri) : this(keyVaultUri, null)
+        public KeyVaultSettingsProvider(IKeyVaultSecretClient kvClient) : this(kvClient, null)
         {
         }
 
-        public KeyVaultSettingsProvider(Uri keyVaultUri, string settingPrefix)
+        public KeyVaultSettingsProvider(IKeyVaultSecretClient kvClient, string settingPrefix)
         {
-            if (keyVaultUri == null)
-                throw new ArgumentNullException(nameof(keyVaultUri));
+            _kvClient = kvClient ?? throw new ArgumentNullException(nameof(kvClient));
 
-            KeyVaultUri = keyVaultUri;
-            SettingPrefix = settingPrefix;
+            _settingPrefix = settingPrefix;
         }
 
         public TTestSettings GetSettings<TTestSettings>() where TTestSettings : class, new()
         {
             try
             {
-                return SettingsKeyVaultSerializer.Deserialize<TTestSettings>(KeyVaultUri, SettingPrefix);
+                return new KeyVaultSettingsSerializer(_kvClient).Deserialize<TTestSettings>(_settingPrefix);
             }
             catch (Exception ex)
             {

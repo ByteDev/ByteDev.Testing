@@ -34,7 +34,7 @@ namespace ByteDev.Testing
 
         protected string GetSettingValue(string exceptionMessage)
         {
-            var value = SettingEnvironmentReader.GetSingleSetting(EnvironmentVarName);
+            var value = EnvironmentVariableReader.Get(EnvironmentVarName);
 
             if (!string.IsNullOrEmpty(value))
                 return value;

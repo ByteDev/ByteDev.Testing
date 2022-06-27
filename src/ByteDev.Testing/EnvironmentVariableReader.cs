@@ -2,9 +2,9 @@
 
 namespace ByteDev.Testing
 {
-    internal static class SettingEnvironmentReader
+    internal static class EnvironmentVariableReader
     {
-        public static string GetSingleSetting(string name)
+        public static string Get(string name)
         {
             if (string.IsNullOrEmpty(name))
                 return null;

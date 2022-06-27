@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace ByteDev.Testing.Serialization
 {
-    internal static class SettingsJsonFileSerializer
+    internal static class JsonFileSettingsSerializer
     {
         public static TTestSettings Deserialize<TTestSettings>(string filePath)
         {

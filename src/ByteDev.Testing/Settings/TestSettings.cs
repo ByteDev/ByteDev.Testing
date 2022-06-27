@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ByteDev.Testing.Settings.Entities;
 using ByteDev.Testing.Settings.Providers;
 
 namespace ByteDev.Testing.Settings

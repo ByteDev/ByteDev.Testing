@@ -1,4 +1,4 @@
-﻿namespace ByteDev.Testing.Settings
+﻿namespace ByteDev.Testing.Settings.Entities
 {
     /// <summary>
     /// Represents settings for a Azure key vault service.

@@ -27,6 +27,7 @@ Full details of the release notes can be viewed on [GitHub](https://github.com/B
 The library is split into the following main parts:
 - Builders
 - HTTP
+- Setting
 - Settings
 
 ---
@@ -110,13 +111,13 @@ var response2 = await httpClient.GetAsync(uri);
 
 ---
 
-### Settings - TestSetting
+### Setting - TestSetting
 
 The `TestSetting` type represents a single string value setting that lives external to a test project.
 
 ```csharp
-using ByteDev.Testing.Settings.Single;
-using ByteDev.Testing.Settings.Single.Providers;
+using ByteDev.Testing.Setting;
+using ByteDev.Testing.Setting.Providers;
 
 // ...
 
@@ -138,7 +139,7 @@ string setting = testSetting.GetSetting();
 
 ---
 
-### Setting TestSettings
+### Settings - TestSettings
 
 The `TestSettings` type represents sets of test settings that live external to a test project.
 
@@ -164,8 +165,8 @@ Example JSON settings file `MyApp.settings.json` (property name case is ignored)
 
 ```csharp
 using ByteDev.Azure.KeyVault.Secrets;
-using ByteDev.Testing.Settings.Multiple;
-using ByteDev.Testing.Settings.Multiple.Providers;
+using ByteDev.Testing.Settings;
+using ByteDev.Testing.Settings.Providers;
 
 // ...
 var kvClient = new KeyVaultSecretClient(keyVaultUri);

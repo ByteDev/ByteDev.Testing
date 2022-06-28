@@ -12,8 +12,9 @@ namespace ByteDev.Testing.Http
     /// </summary>
     public class FakeHttpMessageHandler : HttpMessageHandler
     {
-        private int _index;
         private readonly IList<FakeRequestOutcome> _outcomes;
+
+        private int _index;
 
         /// <summary>
         /// Indicates if the provided outcomes should be repeated when reaching the end of

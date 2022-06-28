@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,8 +23,7 @@ namespace ByteDev.Testing.Settings.Serialization
         {
             var properties = typeof(TTestSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-            var tasks = new List<Task<string>>();
-            var nameValues = new List<Tuple<string, Task<string>>>();
+            var nameTasks = new List<Tuple<string, Task<string>>>();
 
             foreach (var pi in properties)
             {
@@ -31,13 +31,14 @@ namespace ByteDev.Testing.Settings.Serialization
                 
                 var task = _keyVaultClient.GetValueIfExistsAsync(kvSettingName, cancellationToken);
 
-                tasks.Add(task);
-                nameValues.Add(new Tuple<string, Task<string>>(pi.Name, task));
+                nameTasks.Add(new Tuple<string, Task<string>>(pi.Name, task));
             }
+
+            IEnumerable<Task<string>> tasks = nameTasks.Select(i => i.Item2);
 
             await Task.WhenAll(tasks);
 
-            return CreateTestSettings<TTestSettings>(nameValues);
+            return CreateTestSettings<TTestSettings>(nameTasks);
         }
 
         private static TTestSettings CreateTestSettings<TTestSettings>(IEnumerable<Tuple<string, Task<string>>> nameValues) where TTestSettings : class, new()

@@ -6,8 +6,8 @@ namespace ByteDev.Testing.Settings.Providers
 {
     public class KeyVaultSettingsProvider : ISettingsProvider
     {
-        private readonly IKeyVaultSecretClient _kvClient;
         private readonly string _settingPrefix;
+        private readonly KeyVaultSettingsSerializer _kvSerializer;
 
         public KeyVaultSettingsProvider(IKeyVaultSecretClient kvClient) : this(kvClient, null)
         {
@@ -15,8 +15,10 @@ namespace ByteDev.Testing.Settings.Providers
 
         public KeyVaultSettingsProvider(IKeyVaultSecretClient kvClient, string settingPrefix)
         {
-            _kvClient = kvClient ?? throw new ArgumentNullException(nameof(kvClient));
+            if (kvClient == null)
+                throw new ArgumentNullException(nameof(kvClient));
 
+            _kvSerializer = new KeyVaultSettingsSerializer(kvClient);
             _settingPrefix = settingPrefix;
         }
 
@@ -24,7 +26,7 @@ namespace ByteDev.Testing.Settings.Providers
         {
             try
             {
-                return new KeyVaultSettingsSerializer(_kvClient).Deserialize<TTestSettings>(_settingPrefix);
+                return _kvSerializer.DeserializeAsync<TTestSettings>(_settingPrefix).Result;
             }
             catch (Exception ex)
             {

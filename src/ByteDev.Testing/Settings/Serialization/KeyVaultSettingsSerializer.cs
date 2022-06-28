@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,32 +21,21 @@ namespace ByteDev.Testing.Settings.Serialization
         {
             var properties = typeof(TTestSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-            var nameTasks = new List<Tuple<string, Task<string>>>();
+            var propertyNames = properties.Select(s => s.Name).ToList();
+            var kvNames = properties.Select(s => settingPrefix + s.Name);
 
-            foreach (var pi in properties)
-            {
-                string kvSettingName = settingPrefix + pi.Name;
-                
-                var task = _keyVaultClient.GetValueIfExistsAsync(kvSettingName, cancellationToken);
-
-                nameTasks.Add(new Tuple<string, Task<string>>(pi.Name, task));
-            }
-
-            IEnumerable<Task<string>> tasks = nameTasks.Select(i => i.Item2);
-
-            await Task.WhenAll(tasks);
-
-            return CreateTestSettings<TTestSettings>(nameTasks);
-        }
-
-        private static TTestSettings CreateTestSettings<TTestSettings>(IEnumerable<Tuple<string, Task<string>>> nameValues) where TTestSettings : class, new()
-        {
+            var dictionary = await _keyVaultClient.GetValuesIfExistsAsync(kvNames, false, cancellationToken);
+            
             var settings = new TTestSettings();
 
-            foreach (var nameValue in nameValues)
+            int index = 0;
+
+            foreach (var item in dictionary)
             {
-                if (nameValue.Item2.Result != null)
-                    settings.SetPropertyValue(nameValue.Item1, nameValue.Item2.Result);
+                if (item.Value != null)
+                    settings.SetPropertyValue(propertyNames[index], item.Value);
+
+                index++;
             }
 
             return settings;

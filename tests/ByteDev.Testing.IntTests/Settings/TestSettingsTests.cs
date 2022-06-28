@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ByteDev.Azure.KeyVault.Secrets;
 using ByteDev.Testing.IntTests.TestFiles;
 using ByteDev.Testing.Settings;
@@ -82,13 +83,19 @@ namespace ByteDev.Testing.IntTests.Settings
         [TestFixture]
         public class GetSettings_KeyVault : TestSettingsTests
         {
+            private const string Prefix = "ByteDevTesting--";
+
+            private readonly IList<string> _secretNamesSaved = new List<string>();
+
             private TestSettings _sut;
             private TestAzureKeyVaultSettings _testAzureKeyVaultSettings;
             private IKeyVaultSecretClient _kvClient;
-
+            
             [SetUp]
-            public new void SetUp()
+            public new async Task SetUp()
             {
+                await DeleteSecretsAsync();
+
                 _testAzureKeyVaultSettings = JsonFileSettingsSerializer.Deserialize<TestAzureKeyVaultSettings>(SettingsFile);
 
                 _kvClient = new KeyVaultSecretClient(_testAzureKeyVaultSettings.KeyVaultUri, _testAzureKeyVaultSettings.ToClientSecretCredential());
@@ -96,16 +103,24 @@ namespace ByteDev.Testing.IntTests.Settings
                 _sut = new TestSettings();
             }
 
+            [TearDown]
+            public new async Task TearDown()
+            {
+                await DeleteSecretsAsync();
+            }
+            
             [Test]
             public async Task WhenKvSettingMatchesPropertyName_ThenSetProperty()
             {
-                await _kvClient.SafeSetValueAsync("ByteDevTesting--TestName", "John");
+                await SaveSecretAsync(Prefix + nameof(DummyKeyVaultSettings.TestName), "John");
+                await SaveSecretAsync(Prefix + nameof(DummyKeyVaultSettings.TestJob), "Teacher");
 
-                _sut.AddProvider(new KeyVaultSettingsProvider(_kvClient, "ByteDevTesting--"));
+                _sut.AddProvider(new KeyVaultSettingsProvider(_kvClient, Prefix));
 
                 var result = _sut.GetSettings<DummyKeyVaultSettings>();
 
                 Assert.That(result.TestName, Is.EqualTo("John"));
+                Assert.That(result.TestJob, Is.EqualTo("Teacher"));
             }
 
             [Test]
@@ -116,6 +131,7 @@ namespace ByteDev.Testing.IntTests.Settings
                 var result = _sut.GetSettings<DummyKeyVaultSettings>();
 
                 Assert.That(result.TestName, Is.Null);
+                Assert.That(result.TestJob, Is.Null);
             }
 
             [Test]
@@ -128,6 +144,20 @@ namespace ByteDev.Testing.IntTests.Settings
                 var ex = Assert.Throws<TestingException>(() => _sut.GetSettings<DummyKeyVaultSettings>());
                 Assert.That(ex.Message, Is.EqualTo("Could not create new test settings instance."));
                 Assert.That(ex.InnerException.Message, Is.EqualTo("Error while trying to deserialize settings object from Azure Key Vault settings."));
+            }
+
+            private Task SaveSecretAsync(string name, string value)
+            {
+                _secretNamesSaved.Add(name);
+                return _kvClient.SafeSetValueAsync(name, value);
+            }
+
+            private async Task DeleteSecretsAsync()
+            {
+                foreach (var name in _secretNamesSaved)
+                    await _kvClient.DeleteAndPurgeAsync(name);    
+
+                _secretNamesSaved.Clear();
             }
         }
 

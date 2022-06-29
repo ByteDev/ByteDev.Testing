@@ -141,11 +141,11 @@ string setting = testSetting.GetSetting();
 
 ### Settings - TestSettings
 
-The `TestSettings` type represents sets of test settings that live external to a test project.
-
-Example custom settings type:
+The `TestSettings` type represents sets of test settings that lives external to a test project.
 
 ```csharp
+// Define the settings class
+
 public class MyAppSettings
 {
     public string MySecret1 { get; set; }
@@ -169,21 +169,24 @@ using ByteDev.Testing.Settings;
 using ByteDev.Testing.Settings.Providers;
 
 // ...
+
 var kvClient = new KeyVaultSecretClient(keyVaultUri);
 
 var testSettings = new TestSettings();
 
 testSettings
-    .AddProvider(new JsonFileSettingsProvider(@"X:\Secure\MyApp.settings.json"))
+    .AddProvider(new JsonFileSettingsProvider(
+        @"X:\Secure\MyApp.settings.json",
+        @"C:\Temp\MyOtherApp.settings.json))
     .AddProvider(new KeyVaultSettingsProvider(kvClient));
 
-// The TestSettings type will try to get the settings from the JSON
-// file first and if it fails will try Azure Key Vault
+// The TestSettings type will try to get the settings from the two 
+// JSON files first and if it fails will try Azure Key Vault
 
 MyAppSettings settings = testSettings.GetSettings<MyAppSettings>();
 ```
 
-As well as defining and providing your own settings type you can also use the built in `TestAzureSettings` and `TestAzureKeyVaultSettings` classes. 
+As well as defining and providing your own settings class you can also use the built in `TestAzureSettings` and `TestAzureKeyVaultSettings` settings classes. 
 
 For example:
 
@@ -198,6 +201,5 @@ TestAzureSettings settings = testSettings.GetAzureSettings();
 // SubscriptionId, TenantId, ClientId, ClientSecret etc.
 ```
 
----
 
 

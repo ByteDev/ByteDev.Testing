@@ -8,7 +8,7 @@
 
 ## Installation
 
-ByteDev.Testing has been written as a .NET Standard 2.0 library, so you can consume it from a .NET Core or .NET Framework 4.6.1 (or greater) application.
+ByteDev.Testing has been written as a .NET Standard 2.1 library.
 
 ByteDev.Testing is hosted as a package on nuget.org.  To install from the Package Manager Console in Visual Studio run:
 

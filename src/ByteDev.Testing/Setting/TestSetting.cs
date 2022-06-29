@@ -22,7 +22,7 @@ namespace ByteDev.Testing.Setting
         }
 
         /// <summary>
-        /// Clear all settings providers from the list.
+        /// Clear the settings providers list.
         /// </summary>
         /// <returns>Current test settings instance.</returns>
         public TestSetting ClearProviders()

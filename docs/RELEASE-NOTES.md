@@ -1,5 +1,16 @@
 # Release Notes
 
+## 5.0.2 - 06 July 2022
+
+Breaking changes:
+- (None)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- Removed package dependency `ByteDev.Reflection`.
+
 ## 5.0.1 - 06 July 2022
 
 Breaking changes:

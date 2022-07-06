@@ -15,7 +15,7 @@
     <license type="file">LICENSE</license>
     <dependencies>
       <group targetFramework=".NETStandard2.1">
-        <dependency id="ByteDev.Azure.KeyVault" version="2.1.0" />
+        <dependency id="ByteDev.Azure.KeyVault" version="2.3.0" />
         <dependency id="ByteDev.Io" version="7.4.0" />
         <dependency id="ByteDev.Reflection" version="2.3.1" />
         <dependency id="System.Text.Json" version="5.0.2" />

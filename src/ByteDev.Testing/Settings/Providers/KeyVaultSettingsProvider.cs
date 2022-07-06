@@ -1,6 +1,6 @@
 ﻿using System;
 using ByteDev.Azure.KeyVault.Secrets;
-using ByteDev.Testing.Settings.Serialization;
+using ByteDev.Azure.KeyVault.Secrets.Serialization;
 
 namespace ByteDev.Testing.Settings.Providers
 {
@@ -10,7 +10,7 @@ namespace ByteDev.Testing.Settings.Providers
     public class KeyVaultSettingsProvider : ISettingsProvider
     {
         private readonly string _settingPrefix;
-        private readonly KeyVaultSettingsSerializer _kvSerializer;
+        private readonly IKeyVaultSecretSerializer _kvSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ByteDev.Testing.Settings.Providers.KeyVaultSettingsProvider" /> class.
@@ -32,7 +32,7 @@ namespace ByteDev.Testing.Settings.Providers
             if (kvClient == null)
                 throw new ArgumentNullException(nameof(kvClient));
 
-            _kvSerializer = new KeyVaultSettingsSerializer(kvClient);
+            _kvSerializer = new KeyVaultSecretSerializer(kvClient);
             _settingPrefix = settingPrefix;
         }
 
@@ -47,7 +47,12 @@ namespace ByteDev.Testing.Settings.Providers
         {
             try
             {
-                return _kvSerializer.DeserializeAsync<TTestSettings>(_settingPrefix).Result;
+                var options = new DeserializeOptions
+                {
+                    SecretNamePrefix = _settingPrefix
+                };
+
+                return _kvSerializer.DeserializeAsync<TTestSettings>(options).Result;
             }
             catch (Exception ex)
             {

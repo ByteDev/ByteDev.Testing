@@ -1,5 +1,16 @@
 # Release Notes
 
+## 5.0.1 - 06 July 2022
+
+Breaking changes:
+- (None)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- Updated package dependency version: `ByteDev.Azure.KeyVault` to `2.3.0`.
+
 ## 5.0.0 - 29 June 2022
 
 Breaking changes:

@@ -191,7 +191,7 @@ As well as defining and providing your own settings class you can also use the b
 For example:
 
 ```csharp
-using ByteDev.Testing.Settings.Multiple.Entities;
+using ByteDev.Testing.Settings.Entities;
 
 // ...
 

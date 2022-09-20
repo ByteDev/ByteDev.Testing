@@ -39,7 +39,7 @@ namespace ByteDev.Testing.Settings.Entities
         /// <summary>
         /// Convert to type <see cref="T:Azure.Identity.ClientSecretCredential" />.
         /// </summary>
-        /// <param name="tokenCredentialOptions">Token credential options to add into the <see cref="T:Azure.Identity.ClientSecretCredential" /> instance.</param>
+        /// <param name="tokenCredentialOptions">Options that allow to configure the management of the requests sent to the Azure Active Directory service.</param>
         /// <returns>New <see cref="T:Azure.Identity.ClientSecretCredential" /> instance.</returns>
         public ClientSecretCredential ToClientSecretCredential(TokenCredentialOptions tokenCredentialOptions)
         {
@@ -48,6 +48,20 @@ namespace ByteDev.Testing.Settings.Entities
                 ClientId, 
                 ClientSecret,
                 tokenCredentialOptions);
+        }
+
+        /// <summary>
+        /// Convert to type <see cref="T:Azure.Identity.ClientSecretCredential" />.
+        /// </summary>
+        /// <param name="clientSecretCredentialOptions">Options that allow to configure the management of the requests sent to the Azure Active Directory service.</param>
+        /// <returns>New <see cref="T:Azure.Identity.ClientSecretCredential" /> instance.</returns>
+        public ClientSecretCredential ToClientSecretCredential(ClientSecretCredentialOptions clientSecretCredentialOptions)
+        {
+            return new ClientSecretCredential(
+                TenantId, 
+                ClientId, 
+                ClientSecret,
+                clientSecretCredentialOptions);
         }
     }
 }

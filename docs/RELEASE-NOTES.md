@@ -1,5 +1,16 @@
 # Release Notes
 
+## 5.1.0 - 20 September 2022
+
+Breaking changes:
+- (None)
+
+New features:
+- Added overload on method `TestAzureSettings` to take `ClientSecretCredentialOptions`.
+
+Bug fixes / internal changes:
+- Fix so `GetAzureKeyVaultSettings` method returns type `TestAzureKeyVaultSettings`.
+
 ## 5.0.2 - 06 July 2022
 
 Breaking changes:

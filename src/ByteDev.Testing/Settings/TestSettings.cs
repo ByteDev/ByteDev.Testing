@@ -79,7 +79,7 @@ namespace ByteDev.Testing.Settings
         /// </summary>
         /// <returns>Azure Key Vault settings.</returns>
         /// <exception cref="T:ByteDev.Testing.TestingException">No settings providers added or could not create new test settings instance.</exception>
-        public TestAzureSettings GetAzureKeyVaultSettings()
+        public TestAzureKeyVaultSettings GetAzureKeyVaultSettings()
         {
             return GetSettings<TestAzureKeyVaultSettings>();
         }
